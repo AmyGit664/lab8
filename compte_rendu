@@ -1,0 +1,118 @@
+/******************* lab8: Création et utilisation des bibliothèques statiques ******************/
+/********************************** Commandes utilisées *****************************************/
+
+
+
+L'objectif de ce TP est de savoir créer une bibliothèque statique à laquelle on fera appel afin de pouvoir compiler un fichier main associé à un fichier source quelconque. 
+
+/*********************/
+/*** 1ère question ***/
+/*********************/
+
+Pour créer une bibliothèque statique nommée "liboutils.a", il faudra au préalable copier les 2 fichiers 
+sources des fonctions max et min écrites dans la partie 7 et leurs fichiers headers associés en tapant la 
+commande suivante: 
+"cp ~/Desktop/lab7/Maximum/max.c ~/Desktop/lab7/Maximum/max.h ~/Desktop/lab7/Minimum/min.c ~/Desktop/lab7/Minimum/min.h ~/Desktop/lab8".
+
+/*********************/
+/*** 2ème question ***/
+/*********************/
+
+Il faudra ensuite lancer la compilation des fichiers "main.c" et "min.c" sans faire d'édition de
+liens c'est à dire juste générer les fichiers.o avec l'option -c.
+
+/*********************/
+/*** 3ème question ***/
+/*********************/
+
+Les fichiers binaires obtenus "min.o" et "max.o" sont rajoutés ensuite dans la bibliothèque "liboutils.a" que
+nous allons créer avec la commande "ar": "ar r liboutils.a min.o max.o".
+L'option r sert à rajouter les fichiers objet dans cette bibliothèque. Désormais la librairie statique
+est créée.
+
+/*********************/
+/*** 4ème question ***/
+/*********************/
+
+Pour vérifier l'existence des fichiers objet dans l'archive, il suffit de taper "ar t liboutils.a" et
+une liste de ces fichiers apparaît bien dans la console.
+
+/*********************/
+/*** 5ème question ***/
+/*********************/
+
+Une fois les fichiers objet rajoutés et dont l'existence a été vérifiée, il faudra faire la mise à jour
+de la bibliothèque statique avec la commande "ranlib" => "ranlib liboutils.a".
+
+/*********************/
+/*** 6ème question ***/
+/*********************/
+
+Afin de mieux voir l'utilité d'une bibliothèque statique lors de la compilation, un fichier main.c est créé
+qui regroupe les fonctions max et min.
+
+/*********************/
+/*** 7ème question ***/
+/*********************/
+
+L'autre étape consiste à créer deux répertoires include et lib dans le répertoire /opt avec les commandes
+"sudo mkdir include" et "sudo mkdir lib".
+
+/*********************/
+/*** 8ème question ***/
+/*********************/
+
+Les deux répertoires créés contiendront les fichiers headers et la bibliothèque statique créée précédemment.
+Il faudra les déplacer comme ceci:
+"sudo mv max.h min.h /opt/include"
+"sudo mv liboutils.a /opt/lib"
+
+/****************************/
+/*** 9ème-10ème questions ***/
+/****************************/
+
+Dans le répertoire courant, aucun fichier ne doit rester à part le fichier test "main.c". Pour compiler le fichier
+main et créer l'exécutable, il suffit toujours d'utiliser le compilateur gcc mais cette fois-ci en appelant la
+bibliothèque statique et comme on a besoin des fichiers objets et headers qui sont stockés dans les répertoires
+"include" et "lib", il suffira de spécifier le chemin de la librairie qui contient les fichiers objet et celui des
+fichiers headers:
+"gcc main.c -L/opt/lib -I/opt/include -loutils -o main"
+L'exécutable générée est "main".
+
+Après avoir testé le programme, on obtient le résultat attendu (voir capture "main.exe_lib.png").
+
+/*****************************/
+/*** 11ème-12ème questions ***/
+/*****************************/
+
+On souhaite rajouter une nouvelle fonction arithmétique qui calcule la variance. Cette fonction a déjà été écrite
+également dans la partie 7. Il suffit de répéter les mêmes opérations effectuées pour max et min afin de rajouter
+cette fonction à la bibliothèque liboutils et vérifier sa présence.
+
+/**********************/
+/*** 13ème question ***/
+/**********************/
+
+Comme on a rajouté une nouvelle fois un nouvel fichier objet qui est celui du fichier source var.c, il faudra également
+remttre à jour la bibliothèque "liboutils.a" cette fois-ci en tapant: "sudo ranlib liboutils.a" et on peut vérifier la
+présence de tous les fichiers .obj des 3 fonctions en faisant appel à la commande "nm": "nm liboutils.a". Les captures
+"include_files.png" et "liboutils_library.png" montrent bien le contenu des répertoires "include" et "lib". 
+
+/**********************/
+/*** 14ème question ***/
+/**********************/
+
+La fonction variance est rajoutée dans le main.c et la fonction header "var.h" est également incluse. La commande utilisée
+pour compiler est la même que celle d'avant. Les résultats peuvent être visualisés sur la capture "main_total.png".
+
+/*****************************/
+/*** 15ème-16ème questions ***/
+/*****************************/
+
+Enfin, si on souhaite arrondir le résultat de la variance calculée précédemment, il suffit d'abord de rajouter la bibliothèque
+math "#include <math.h>" puis les 2 fonctions dans le printf. Par contre au niveau de la compilation, il ne faut pas oublier de
+rajouter "-lm" après l'exécutable (voir capture "floor_ceil.png").
+
+
+
+
